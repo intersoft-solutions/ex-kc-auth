@@ -2,6 +2,28 @@
 
 Keycloak Elixir integration for multi-tenant single page apps.
 
+## Starting the application
+
+In your supervision tree, add the following:
+
+```
+  {KCAuth, otp_app: <your_otp_app_name>}
+```
+
+In your config, add the following:
+
+```
+  config :your_otp_app_name, KCAuth,
+      url: "http://127.0.0.1:32768",
+```
+
+## Verifying tokens
+
+```
+  {:ok, jwt, realm} = KCAuth.verify(Some_jwt_token)
+
+```
+
 ## Keycloak test setup
 
 ### Running a test keycloak server
