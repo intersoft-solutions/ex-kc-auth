@@ -7,7 +7,7 @@ Keycloak Elixir integration for multi-tenant single page apps.
 In your supervision tree, add the following:
 
 ```
-  {KCAuth, otp_app: <your_otp_app_name>}
+  {KCAuth, [otp_app: <your_otp_app_name>]}
 ```
 
 In your config, add the following:
@@ -20,7 +20,7 @@ In your config, add the following:
 ## Verifying tokens
 
 ```
-  {:ok, jwt, realm} = KCAuth.verify(Some_jwt_token)
+  {:ok, jwt, realm} = KCAuth.verify(some_jwt_token)
 
 ```
 
