@@ -6,6 +6,8 @@ defmodule KCAuth.JWT do
 
   defstruct fields: %{}
 
+  @type t :: %__MODULE__{}
+
   def get_jws_kid(jwt_token) do
     with {:ok, %{fields: fields}} <- peek_protected(jwt_token) do
       case fields do
