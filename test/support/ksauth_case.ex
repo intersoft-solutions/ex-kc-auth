@@ -1,4 +1,5 @@
 defmodule KCAuthCase do
+  @moduledoc false
   use ExUnit.CaseTemplate
 
   import Plug.Conn
@@ -16,6 +17,7 @@ defmodule KCAuthCase do
   def fixture(:exp_token), do: @exp_token
 
   defmodule KCAuthMock do
+    @moduledoc false
     def verify("ok") do
       {:ok, %{fields: %{"typ" => "Bearer"}}, %{realm: "ok"}}
     end
