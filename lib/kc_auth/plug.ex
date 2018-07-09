@@ -58,7 +58,7 @@ defmodule KCAuth.Plug do
   def current_realm(conn), do: conn.private[:kc_auth_realm]
 
   defp extract_token_from_headers([]), do: nil
-  defp extract_token_from_headers(["Bearer: " <> token | _]), do: token
+  defp extract_token_from_headers(["Bearer " <> token | _]), do: token
   defp extract_token_from_headers([_ | t]), do: extract_token_from_headers(t)
 
   defp verify_token(nil, _), do: nil

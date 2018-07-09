@@ -9,7 +9,7 @@ in your mix.exs file:
 
 ```
 defp deps do
-  [{:kc_auth, git: "https://github.com/intersoft-solutions/ex-kc-auth", tag: "0.1.0"}]
+  [{:kc_auth, git: "https://github.com/intersoft-solutions/ex-kc-auth", tag: "0.1.1"}]
 end
 ```
 

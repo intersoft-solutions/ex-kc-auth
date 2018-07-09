@@ -34,6 +34,6 @@ defmodule KCAuthCase do
   def build_conn(), do: Plug.Test.conn(:get, "/")
 
   def put_mock_jwt(conn, mock) do
-    put_req_header(conn, "authorization", "Bearer: " <> mock)
+    put_req_header(conn, "authorization", "Bearer " <> mock)
   end
 end
