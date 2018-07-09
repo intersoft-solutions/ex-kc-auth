@@ -1,9 +1,7 @@
 defmodule KCAuth.KeycloakTest do
   @moduledoc false
 
-  use ExUnit.Case
-  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
-
+  use KCAuthCase
   alias KCAuth.Keycloak
   doctest Keycloak
 

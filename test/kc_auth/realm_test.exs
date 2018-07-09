@@ -1,7 +1,7 @@
 defmodule KCAuth.RealmTest do
   @moduledoc false
 
-  use ExUnit.Case
+  use KCAuthCase
   alias KCAuth.Realm
 
   @kc_url "http://localhost:8080"

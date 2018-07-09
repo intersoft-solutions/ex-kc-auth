@@ -1,14 +1,10 @@
 defmodule KCAuth.ConfigTest do
   @moduledoc false
 
-  use ExUnit.Case
-
-  alias KCAuth.Config
-
-  @otp_app :kc_auth
+  use KCAuthCase
 
   setup do
-    {:ok, _} = start_supervised({KCAuth.Config, [otp_app: @otp_app]})
+    {:ok, _} = start_supervised({KCAuth.Config, [otp_app: :kc_auth]})
     :ok
   end
 
@@ -18,6 +14,6 @@ defmodule KCAuth.ConfigTest do
       |> Application.get_env(KCAuth, [])
       |> KCAuth.Keycloak.new()
 
-    assert expected === Config.get(:keycloak)
+    assert expected === KCAuth.Config.get(:keycloak)
   end
 end
