@@ -40,16 +40,22 @@ defmodule KCAuth.Plug do
   end
 
   @doc """
-  Returns the JWT or nil if this connection was not authenticated
+  Returns the JWT token or nil if this connection was not authenticated
   """
-  @spec get_claims(Plug.Conn.t()) :: nil | KCAuth.JWT.t()
-  def get_claims(conn), do: conn.private[:kc_auth_jwt]
+  @spec current_token(Plug.Conn.t()) :: nil | KCAuth.JWT.t()
+  def current_token(conn), do: conn.private[:kc_auth_jwt]
+
+  @doc """
+  Returns the JWT fields or nil if this connection was not authenticated
+  """
+  @spec current_claims(Plug.Conn.t()) :: nil | %{binary => term}
+  def current_claims(conn), do: conn.private |> Map.get(:kc_auth_jwt, %{}) |> Map.get(:fields)
 
   @doc """
   Returns the Realm or nil if this connection was not authenticated
   """
-  @spec get_realm(Plug.Conn.t()) :: nil | KCAuth.Realm.t()
-  def get_realm(conn), do: conn.private[:kc_auth_realm]
+  @spec current_realm(Plug.Conn.t()) :: nil | KCAuth.Realm.t()
+  def current_realm(conn), do: conn.private[:kc_auth_realm]
 
   defp extract_token_from_headers([]), do: nil
   defp extract_token_from_headers(["Bearer: " <> token | _]), do: token

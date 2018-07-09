@@ -39,23 +39,33 @@ defmodule KCAuth.PlugTest do
     assert false == KCAPlug.is_authenticated?(conn)
   end
 
-  test "get_claims/1 returns the JWT token if the conn was authenticated" do
+  test "current_token/1 returns the JWT fields if the conn was authenticated" do
     conn = build_conn() |> put_mock_jwt("ok") |> KCAPlug.call(kc_auth: @kc_auth)
-    assert %{fields: %{"typ" => "Bearer"}} == KCAPlug.get_claims(conn)
+    assert %{fields: %{"typ" => "Bearer"}} == KCAPlug.current_token(conn)
   end
 
-  test "get_claims/1 returns nil if the conn was unauthenticated" do
+  test "current_token/1 returns nil if the conn was unauthenticated" do
     conn = build_conn()
-    assert nil == KCAPlug.get_claims(conn)
+    assert nil == KCAPlug.current_token(conn)
   end
 
-  test "get_realm/1 returns the Realm if the conn was authenticated" do
+  test "current_claims/1 returns the JWT fields if the conn was authenticated" do
     conn = build_conn() |> put_mock_jwt("ok") |> KCAPlug.call(kc_auth: @kc_auth)
-    assert %{realm: "ok"} == KCAPlug.get_realm(conn)
+    assert %{"typ" => "Bearer"} == KCAPlug.current_claims(conn)
   end
 
-  test "get_realm/1 returns nil if the conn was unauthenticated" do
+  test "current_claims/1 returns nil if the conn was unauthenticated" do
     conn = build_conn()
-    assert nil == KCAPlug.get_realm(conn)
+    assert nil == KCAPlug.current_claims(conn)
+  end
+
+  test "current_realm/1 returns the Realm if the conn was authenticated" do
+    conn = build_conn() |> put_mock_jwt("ok") |> KCAPlug.call(kc_auth: @kc_auth)
+    assert %{realm: "ok"} == KCAPlug.current_realm(conn)
+  end
+
+  test "current_realm/1 returns nil if the conn was unauthenticated" do
+    conn = build_conn()
+    assert nil == KCAPlug.current_realm(conn)
   end
 end
