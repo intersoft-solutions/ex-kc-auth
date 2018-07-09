@@ -8,6 +8,11 @@ defmodule KCAuth do
   @doc false
   def child_spec(opts), do: KCAuth.Supervisor.child_spec(opts)
 
+  @doc """
+  Verifies the passed jwt token.
+  If the token is good the token and realm will be returned
+  """
+  @spec verify(binary) :: {:ok, JWT.t(), Realm.t()} | {:error, term}
   def verify(jwt_token) do
     keycloak = Config.get(:keycloak)
 
