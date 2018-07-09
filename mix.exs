@@ -8,7 +8,8 @@ defmodule KCAuth.MixProject do
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -30,6 +31,7 @@ defmodule KCAuth.MixProject do
       # Dev/Test dependencies
       {:exvcr, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.8", only: :test, runtime: false},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
     ]
