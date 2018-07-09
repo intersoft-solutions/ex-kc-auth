@@ -42,7 +42,7 @@ defmodule KCAuth.Keycloak do
   @doc """
   Fetches the realm JWKS from the keycloak server.
   """
-  @spec get_jwks(t, Realm.t()) :: {:ok, %{binary => term}} | {:error, term}
+  @spec get_jwks(t, Realm.t()) :: {:ok, term} | {:error, term}
   def get_jwks(kc, realm_config) do
     with {:ok, resp} <- HTTPoison.get(realm_config.jwks_uri),
          :ok <- ensure_200_status(resp),
