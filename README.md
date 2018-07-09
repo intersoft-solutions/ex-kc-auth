@@ -2,26 +2,52 @@
 
 Keycloak Elixir integration for multi-tenant single page apps.
 
+
+## Add KCAuth to your application
+
+in your mix.exs file:
+
+```
+defp deps do
+  [{:kc_auth, git: "https://github.com/intersoft-solutions/ex-kc-auth", tag: "0.1.0"}]
+end
+```
+
 ## Starting the application
 
 In your supervision tree, add the following:
 
 ```
-  {KCAuth, [otp_app: <your_otp_app_name>]}
+{KCAuth, [otp_app: <your_otp_app_name>]}
 ```
 
 In your config, add the following:
 
 ```
-  config :your_otp_app_name, KCAuth,
+config :your_otp_app_name, KCAuth,
       url: "http://127.0.0.1:32768",
 ```
 
-## Verifying tokens
+## Manually Verifying tokens
 
 ```
-  {:ok, jwt, realm} = KCAuth.verify(some_jwt_token)
+{:ok, jwt, realm} = KCAuth.verify(some_jwt_token)
+```
 
+## Verifying tokens in Phoenix
+
+Example to add the plug into your api
+```  
+pipeline :api do
+  plug :accepts, ["json"]
+  plug KCAuth.Plug
+  plug KCAuth.Plug.EnsureAuthenticated
+end
+
+scope "/api", MyApiWeb do
+  pipe_through :api
+  resources "/myapi", APIController
+end
 ```
 
 ## Keycloak test setup
