@@ -21,6 +21,7 @@ defmodule KCAuth.MixProject do
       {:jason, "~> 1.1"},
       {:jose, "~> 1.8"},
       {:cachex, "~> 3.0"},
+      {:plug, "~> 1.6"},
 
       # Dev/Test dependencies
       {:exvcr, "~> 0.10", only: :test},
