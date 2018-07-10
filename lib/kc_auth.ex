@@ -1,12 +1,60 @@
 defmodule KCAuth do
   @moduledoc """
-  Documentation for KCAuth.
+  Defines a keycloak authentication module.
+
+  When used, the module expects the `:otp_app` as option.
+  The `:otp_app` should point to an OTP application that has
+  the KCAuth configuration. For example, the repository:
+
+      defmodule MyAuth do
+        use KCAuth, otp_app: :my_app
+      end
+
+  Could be configured with:
+
+      config :my_app, KCAuth,
+        url: "http://127.0.0.1:8080",
+        allowed_algos: ["RS256"]
+
+  In case the KCAuth needs to be dynamically configured, for example by
+  reading a system environment variable, such can be done via the
+  `c:init/2` callback. It will receive the config which can then be modified.
+
+      def init(config) do
+        Keyword.put(config, :url, System.get_env("KC_URL"))
+      end
+
   """
 
   alias KCAuth.{JWT, Realm, Keycloak, JWKStore, Config}
 
-  @doc false
-  def child_spec(opts), do: KCAuth.Supervisor.child_spec(opts)
+  @callback init(term) :: term
+
+  defmacro __using__(opts) do
+    quote bind_quoted: [opts: opts] do
+      @otp_app Keyword.fetch!(opts, :otp_app)
+      @behaviour KCAuth
+
+      @doc false
+      def child_spec(opts \\ []) do
+        @otp_app
+        |> Application.get_env(KCAuth, [])
+        |> init()
+        |> KCAuth.Supervisor.child_spec()
+      end
+
+      @doc false
+      def init(x), do: x
+
+      defdelegate verify(jwt_token), to: KCAuth
+      defdelegate is_authenticated?(conn), to: KCAuth.Plug
+      defdelegate current_token(conn), to: KCAuth.Plug
+      defdelegate current_claims(conn), to: KCAuth.Plug
+      defdelegate current_realm(conn), to: KCAuth.Plug
+
+      defoverridable KCAuth
+    end
+  end
 
   @doc """
   Verifies the passed jwt token.

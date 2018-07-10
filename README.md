@@ -9,29 +9,44 @@ in your mix.exs file:
 
 ```
 defp deps do
-  [{:kc_auth, git: "https://github.com/intersoft-solutions/ex-kc-auth", tag: "0.1.1"}]
+  [{:kc_auth, git: "https://github.com/intersoft-solutions/ex-kc-auth", tag: "0.1.2"}]
 end
 ```
 
 ## Starting the application
 
-In your supervision tree, add the following:
+Define a module that uses the KCAuth module.
+Optionally implement the `init/1` function to modify the config at runtime.
 
 ```
-{KCAuth, [otp_app: <your_otp_app_name>]}
+defmodule MyAuth do
+  use KCAuth, otp_app: :your_otp_app_name
+
+  def init(cfg), do: cfg
+end
+
 ```
 
 In your config, add the following:
 
 ```
 config :your_otp_app_name, KCAuth,
-      url: "http://127.0.0.1:32768",
+      url: "http://127.0.0.1:32768"
+```
+
+In your supervision tree, add the following:
+
+```
+children = [
+  MyAuth
+]
+Supervisor.start_link(children, opts)
 ```
 
 ## Manually Verifying tokens
 
 ```
-{:ok, jwt, realm} = KCAuth.verify(some_jwt_token)
+{:ok, jwt, realm} = MyAuth.verify(some_jwt_token)
 ```
 
 ## Verifying tokens in Phoenix
@@ -48,6 +63,14 @@ scope "/api", MyApiWeb do
   pipe_through :api
   resources "/myapi", APIController
 end
+```
+
+Example to get hold of the data in your controllers
+```
+MyAuth.is_authenticated?(conn)
+MyAuth.current_token(conn)
+MyAuth.current_claims(conn)
+MyAuth.current_realm(conn)
 ```
 
 ## Keycloak test setup
@@ -146,4 +169,3 @@ docker exec -it keycloak /opt/jboss/keycloak/bin/kcadm.sh \
     -s 'redirectUris=["http://127.0.0.1:4200/*"]' \
     -s 'webOrigins=["+"]'
 ```
-

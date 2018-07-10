@@ -3,17 +3,16 @@ defmodule KCAuth.ConfigTest do
 
   use KCAuthCase
 
-  setup do
-    {:ok, _} = start_supervised({KCAuth.Config, [otp_app: :kc_auth]})
-    :ok
+  test "can be started and linked" do
+    {:ok, _} = start_supervised({KCAuth.Config, [url: "test"]})
   end
 
-  test "can be started and linked" do
-    expected =
-      :kc_auth
-      |> Application.get_env(KCAuth, [])
-      |> KCAuth.Keycloak.new()
+  test "allows retrieving the keycloak config" do
+    {:ok, _} = start_supervised({KCAuth.Config, [url: "test"]})
 
-    assert expected === KCAuth.Config.get(:keycloak)
+    assert KCAuth.Config.get(:keycloak) === %KCAuth.Keycloak{
+             url: "test",
+             allowed_algos: ["RS256"]
+           }
   end
 end

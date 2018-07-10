@@ -5,17 +5,12 @@ defmodule KCAuth.Config do
   use GenServer
 
   def start_link(opts) do
-    kc =
-      opts
-      |> Keyword.fetch!(:otp_app)
-      |> Application.get_env(KCAuth, [])
-      |> KCAuth.Keycloak.new()
-
-    GenServer.start_link(__MODULE__, [kc], name: __MODULE__)
+    keycloak = KCAuth.Keycloak.new(opts)
+    GenServer.start_link(__MODULE__, keycloak, name: __MODULE__)
   end
 
   def get(key) do
-    [{^key, [val]}] = :ets.lookup(__MODULE__, key)
+    [{^key, val}] = :ets.lookup(__MODULE__, key)
     val
   end
 
