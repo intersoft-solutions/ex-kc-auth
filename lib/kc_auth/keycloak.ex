@@ -35,7 +35,7 @@ defmodule KCAuth.Keycloak do
 
     with {:ok, resp} <- HTTPoison.get(url),
          :ok <- ensure_200_status(resp) do
-      Realm.from_json(resp.body)
+      Realm.from_json(realm, resp.body)
     end
   end
 

@@ -19,6 +19,7 @@ defmodule KCAuth.KeycloakTest do
         |> Keycloak.new()
         |> Keycloak.get_realm_config(@realm)
 
+      assert config.name == @realm
       assert config.issuer == "#{@kc_url}/auth/realms/#{@realm}"
     end
   end

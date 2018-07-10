@@ -3,7 +3,7 @@ defmodule KCAuth.Realm do
   Keycloak realm openid configuration
   """
 
-  @fields ~w(authorization_endpoint check_session_iframe claim_types_supported claims_parameter_supported claims_supported code_challenge_methods_supported end_session_endpoint grant_types_supported id_token_signing_alg_values_supported issuer jwks_uri registration_endpoint request_object_signing_alg_values_supported request_parameter_supported request_uri_parameter_supported response_modes_supported response_types_supported scopes_supported subject_types_supported tls_client_certificate_bound_access_tokens token_endpoint token_endpoint_auth_methods_supported token_endpoint_auth_signing_alg_values_supported token_introspection_endpoint userinfo_endpoint userinfo_signing_alg_values_supported)
+  @fields ~w(authorization_endpoint check_session_iframe claim_types_supported claims_parameter_supported claims_supported code_challenge_methods_supported end_session_endpoint grant_types_supported id_token_signing_alg_values_supported issuer jwks_uri registration_endpoint request_object_signing_alg_values_supported request_parameter_supported request_uri_parameter_supported response_modes_supported response_types_supported scopes_supported subject_types_supported tls_client_certificate_bound_access_tokens token_endpoint token_endpoint_auth_methods_supported token_endpoint_auth_signing_alg_values_supported token_introspection_endpoint userinfo_endpoint userinfo_signing_alg_values_supported name)
 
   defstruct @fields |> Enum.map(&String.to_atom/1)
 
@@ -17,15 +17,15 @@ defmodule KCAuth.Realm do
   @doc """
   Parses the json and creates a %RealmConfig{}
   """
-  @spec from_json(binary) :: {:ok, t} | {:error, term}
-  def from_json(json_string) do
+  @spec from_json(binary, binary) :: {:ok, t} | {:error, term}
+  def from_json(realm_name, json_string) do
     with {:ok, json} <- Jason.decode(json_string) do
       attributes =
         json
         |> Map.take(@fields)
         |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
 
-      {:ok, struct(__MODULE__, attributes)}
+      {:ok, struct(__MODULE__, [{:name, realm_name} | attributes])}
     end
   end
 
