@@ -19,7 +19,7 @@ defmodule KCAuth.MixProject do
   end
 
   def application do
-    [applications: [:cachex, :httpoison]]
+    [applications: [:cachex, :httpoison, :jason, :jose, :plug, :parse_trans, :unsafe]]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
